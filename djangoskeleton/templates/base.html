@@ -1,0 +1,33 @@
+{% load skeleton %}
+<!doctype html>
+<html class="no-js" {% skeleton_get_html_attributes %}>
+    <head>
+    <title>{% block title %}Título de la página{% endblock %}</title>
+
+        <!-- meta -->
+        {% skeleton_get_meta %}
+
+        <!-- stylesheet, javascript y otros -->
+        {% skeleton_get_style %}
+        {% skeleton_get_head_scripts %}
+    </head>
+
+    <body {% skeleton_get_body_attributes %}>
+        <!-- header -->
+        {% skeleton_get_header %}
+
+        <!-- main content -->
+        {% block main %}
+        <main>    
+            ...
+        </main>
+        {% endblock %}
+
+        <!-- footer -->
+        {% skeleton_get_footer %}
+
+        <!-- scripts -->
+        {% skeleton_get_scripts %}
+    </body>
+</html>
+
