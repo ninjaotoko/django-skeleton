@@ -41,7 +41,8 @@ def skeleton_get_scripts(context):
 
 def render_as_list(context, object_list, tag_wrapper='ul', \
         tag_wrapper_attribs='class="no-bullet"', tag_wrapper_element='li', \
-        tag_wrapper_element_attribs='', tag_element='', tag_element_attribs=''):
+        tag_wrapper_element_attribs='', tag_element='', tag_element_attribs='', \
+        object_field=''):
 
     if isinstance(tag_wrapper_attribs, dict):
         tag_wrapper_attribs = dict_to_attribs(tag_wrapper_attribs)
@@ -52,13 +53,19 @@ def render_as_list(context, object_list, tag_wrapper='ul', \
     if isinstance(tag_element_attribs, dict):
         tag_element_attribs = dict_to_attribs(tag_element_attribs)
 
-    element = '{{ object }}'
+    object_tag = 'object'
+    
+    if object_field:
+        object_tag = 'object.%s' % object_field
 
     if tag_element:
-        element = "<%(tag)s %(attribs)s>{{ object }}</%(tag)s>" % {
+        element = "<%(tag)s %(attribs)s>{{ %(object_tag) }}</%(tag)s>" % {
                 'tag':tag_element, 
-                'attribs': tag_element_attribs
+                'attribs': tag_element_attribs,
+                'object_tag': object_tag
             }
+    else:
+        element = "{{ %s }}" % object_tag
 
     args = {
         'tag_wrapper': tag_wrapper,
