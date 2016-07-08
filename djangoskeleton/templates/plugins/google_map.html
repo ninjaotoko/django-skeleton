@@ -1,0 +1,73 @@
+{% load static %}
+{% comment %}
+Espera un `object_list` con atributo location.
+
+location:
+{
+    gis: {
+        lat: ...,
+        lng: ...
+    },
+    name: "...",
+    marker: "image/marker.png"
+}
+
+map_options es un discionario con los datos de creación del mapa.
+{% endcomment %}
+{#<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>#}
+<script>
+    // https://developers.google.com/maps/documentation/javascript/markers
+function initialize() {
+    var mapOptions = {{ map_options|safe }};
+    {% if center_point %}mapOptions['center'] = {{ center_point|safe }};{% endif %}
+
+    var map = new google.maps.Map(document.getElementById("{{ html_id }}"),
+            mapOptions);
+
+    setMarkers(map, address_list);
+}
+
+/*
+   {{ object_list|safe }}
+ */
+
+
+var address_list = [
+{% for address in object_list %}
+['{{ address.name }}', {% firstof address.lat address.gis.lat %}, {% firstof address.lng address.gis.lng %}{% if address.marker %}, '{% static address.marker %}'{% endif %}]{% if not forloop.last %},{% endif %}
+{% endfor %}
+];
+
+function setMarkers(map, locations) {
+    for (var i = 0; i < locations.length; i++) {
+        var address = locations[i];
+        var addressLatLng = new google.maps.LatLng(address[1], address[2]);
+        var markerOpts = {
+            position: addressLatLng,
+            map: map,
+            title: address[0],
+            zIndex: 10+i
+        };
+
+        if (address[3]) markerOpts['icon'] = address[3];
+
+        var marker = new google.maps.Marker(markerOpts);
+    }
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+{% comment %}
+Este codigo no lo voy a poner aca para no generar dependencia
+
+attachListener(map);
+function attachListener(map) {
+    // require jquery
+    $("form#form-sucursales select").on("change", function(){
+        var gis = $("option:selected", this).data('gis_position').split(',');
+        map.setZoom(Number(gis[2]));
+        map.setCenter(new google.maps.LatLng(Number(gis[0]), Number(gis[1])));
+    });
+}
+{% endcomment %}

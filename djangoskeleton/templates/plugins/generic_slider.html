@@ -1,0 +1,14 @@
+{% load static skeleton_tags %}
+{% if object_list %}
+<ul id="{{ slider_id }}" data-orbit data-options="{{ slider_options|safe }}">
+    {% for object in object_list %}
+    <li>
+        {% if resolve_link and object|resolve_link %}
+        <a href="{{ object|resolve_link }}">{{ object|safe }}</a>
+        {% else %}
+        {{ object|safe }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}

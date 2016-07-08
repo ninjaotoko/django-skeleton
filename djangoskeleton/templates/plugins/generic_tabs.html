@@ -1,0 +1,16 @@
+{% load static skeleton_tags %}
+{% if object_list %}
+<ul class="tabs" data-tab id="{{ slider_id }}" {{ tab_attrs }}>
+    {% for object in object_list %}
+    <li class="tab-title"><a href="#{{ object.title|slugify }}">{{ object.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="tabs-content">
+    {% for object in object_list %}
+    <div class="content " id="{{ object.title|slugify }}">
+        {{ object.content|safe }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
